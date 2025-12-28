@@ -144,6 +144,7 @@ Install the following:
 •	Git
 
 🌐 Project Overview
+
 This project is a simple CRUD application:
 •	Save users with firstName, lastName, and email.
 •	View all saved users on the UI or via REST API.
