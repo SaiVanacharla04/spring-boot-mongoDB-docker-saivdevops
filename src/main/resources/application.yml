@@ -1,0 +1,29 @@
+spring:
+  data:
+    mongodb:
+      # MongoDB connection settings for Spring Data MongoDB
+
+      # Use this URI format when MongoDB is running as a Replica Set
+      # uri: mongodb://${MONGO_DB_HOSTNAME}:${MONGO_DB_PASSWORD}@mongod-0.mongodb:27017,mongod-1.mongodb:27017,mongod-2.mongodb:27017/users
+
+      # MongoDB host name (usually provided via environment variable)
+      host: ${MONGO_DB_HOSTNAME}
+
+      # Default MongoDB port
+      port: 27017
+
+      # MongoDB username (fetched from environment variable)
+      username: ${MONGO_DB_USERNAME}
+
+      # MongoDB password (fetched from environment variable)
+      password: ${MONGO_DB_PASSWORD}
+
+      # Name of the database used by the application
+      database: users
+
+      # Database used for authentication (commonly "admin")
+      authentication-database: admin
+
+server:
+  # Port on which the Spring Boot application will run
+  port: 8080
