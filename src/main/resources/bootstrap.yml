@@ -1,0 +1,9 @@
+spring:
+  application:
+    # Name of the Spring Boot application
+    # Used for logging, monitoring, and service identification
+    name: spring-boot-app
+
+server:
+  # Port number on which the application will run
+  port: 8080
