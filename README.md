@@ -150,7 +150,22 @@ This project is a simple CRUD application:
 •	Deployed on Kubernetes with persistent storage and environment separation.
 
 **File Map**
-<img width="1106" height="656" alt="image" src="https://github.com/user-attachments/assets/1e3586cc-9bb1-4a20-a5d8-82c2c90f7c10" />
+File	Purpose
+DemoApp.java	Entry-point; boots Spring, maps / → index.html.
+User.java	Mongo document (@Document) holding user fields + equals/hashCode.
+UserController.java	Form POST handler (/save) – persists new users via repository.
+UserResource.java	REST controller (/api/users) – lists/fetches users as JSON.
+UserRepository.java	Spring-Data interface; gives CRUD + paging on users collection.
+WebConfig.java	Static-resource routing (/css/**, /js/**, /webjars/**).
+index.html	Thymeleaf UI – bootstrap form + AJAX table showing saved users.
+application.yml	Runtime config – Mongo credentials/host/port via env-vars.
+bootstrap.yml	Early-boot properties (app name, default port 8080).
+logback-spring.xml	JSON console logs with trace/span IDs (Sleuth + Logstash encoder).
+pom.xml	Maven coordinates & deps: Spring Boot 2.1.5, MongoDB, Thymeleaf, WebJars, Sleuth.
+Dockerfile	Multi-stage build: Maven → JAR → Alpine JDK image, exposes 8080.
+springBootMongo.yaml	Complete K8s manifest – ConfigMap, Secret, PV, PVC, Mongo ReplicaSet, Spring Deployment + NodePort Service.
+k8s/deploy.yaml	Same as above (duplicated) – ready for kubectl apply -f k8s/deploy.yaml.
+
 
 ________________________________________
 🌱 Environment Variables
