@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!-- HTML5 document declaration -->
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Thymeleaf namespace declaration -->
+
+<head>
+	<!-- Character encoding -->
+	<meta charset="UTF-8">
+
+	<!-- Compatibility for Internet Explorer -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<!-- Responsive design for mobile devices -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Bootstrap CSS loaded via WebJars -->
+	<link rel="stylesheet" type="text/css"
+		th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
+
+	<!-- jQuery JavaScript -->
+	<script type="text/javascript"
+		th:src="@{/webjars/jquery/3.2.1/jquery.min.js/}"></script>
+
+	<!-- Bootstrap JavaScript -->
+	<script type="text/javascript"
+		th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+
+	<!-- Page title -->
+	<title>Spring Boot MongoDB Demo</title>
+</head>
+
+<body>
+	<!-- Main container -->
+	<div class="container">
+
+		<!-- Page heading -->
+		<h1 class="text-center">Spring Boot with MongoDB Project V1.0.1</h1>
+
+		<!-- User input form -->
+		<div class="col-md-6">
+			<form name="saveUser" action="/save" method="post"
+				class="form-horizontal">
+
+				<!-- First Name field -->
+				<div class="form-group">
+					<label for="firstName">First Name:</label>
+					<input type="text" id="firstName" class="form-control"
+						placeholder="First Name" name="firstName" />
+				</div>
+
+				<!-- Last Name field -->
+				<div class="form-group">
+					<label for="lastName">Last Name:</label>
+					<input type="text" id="lastName" class="form-control"
+						placeholder="Last Name" name="lastName">
+				</div>
+
+				<!-- Email field -->
+				<div class="form-group">
+					<label for="email">Email:</label>
+					<input type="email" id="email" class="form-control"
+						placeholder="Email" name="email">
+				</div>
+
+				<!-- Submit button -->
+				<div class="form-group">
+					<button type="submit" class="btn btn-default">Submit</button>
+				</div>
+			</form>
+		</div>
+
+		<!-- Table to display saved users -->
+		<div class="col-md-12">
+			<h2>Saved Users</h2>
+			<table id="usersTable" class="table table-striped">
+
+				<!-- Table header -->
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>First Name</th>
+						<th>Last Name</th>
+						<th>Email</th>
+					</tr>
+				</thead>
+
+				<!-- Table body populated using AJAX -->
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- Footer section -->
+		<div class="row-md-8">
+
+			<!-- Logo image -->
+			<div class="col-md-3">
+				<img th:src="@{/img/saiswaroop.jpg}" alt="logo" height="200">
+			</div>
+
+			<!-- Training and contact details -->
+			<div class="col-md-8">
+				<h4 class="text-center">
+					Sai Swaroop Vanacharla DEVOPS ONLINE TRAINING Hyderabad.
+				</h4>
+				<h4 class="text-center">
+					Contact @ +91 9392607228 , +91-9392607228
+				</h4>
+				<h5 class="text-center">
+					Copyrights 2025 by
+					<a href="http://saivdevops.com/">
+						Sai Swaroop Vanacharla DEVOPS
+					</a>
+				</h5>
+			</div>
+		</div>
+
+	</div>
+
+	<!-- AJAX call to fetch users from backend API -->
+	<script>
+		$.ajax({
+			// REST API endpoint
+			url : "/api/users",
+
+			// On successful response
+			success : function(response) {
+
+				// Loop through each user object
+				$.each(response, function(i, item) {
+
+					// Create a new table row
+					var row = $("<tr />");
+					$("#usersTable").append(row);
+
+					// Add user data to table columns
+					row.append($("<td>" + item.id + "</td>"));
+					row.append($("<td>" + item.firstName + "</td>"));
+					row.append($("<td>" + item.lastName + "</td>"));
+					row.append($("<td>" + item.email + "</td>"));
+				});
+			}
+		})
+	</script>
+
+</body>
+</html>
