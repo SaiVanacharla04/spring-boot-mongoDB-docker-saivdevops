@@ -144,13 +144,13 @@ Install the following:
 •	Git
 
 🌐 Project Overview
-
+```
 This project is a simple CRUD application:
 •	Save users with firstName, lastName, and email.
 •	View all saved users on the UI or via REST API.
 •	MongoDB serves as a NoSQL database.
 •	Deployed on Kubernetes with persistent storage and environment separation.
-
+```
 **File Map**
 
 | File                     | Purpose                                                                                                     |
@@ -404,8 +404,13 @@ Key Features of Flow
 •	Kubernetes Secrets manage credentials securely.
 ________________________________________
 ✅ Summary
+```
 This flowchart and detailed explanation show the end-to-end lifecycle of your project:
+
 User → UI → Controller → Repository → Database → Docker → Kubernetes → UI
+
+This captures real corporate DevOps practices, scalability, and production readiness.
+```
 
 🛠 Troubleshooting
 Application Not Starting
