@@ -148,19 +148,18 @@ This project is a simple CRUD application:
 •	View all saved users on the UI or via REST API.
 •	MongoDB serves as a NoSQL database.
 •	Deployed on Kubernetes with persistent storage and environment separation.
+
+**File Map**
+<img width="1106" height="656" alt="image" src="https://github.com/user-attachments/assets/1e3586cc-9bb1-4a20-a5d8-82c2c90f7c10" />
+
 ________________________________________
 🌱 Environment Variables
-Variable	Description
-MONGO_DB_HOSTNAME	MongoDB hostname or service name
-MONGO_DB_USERNAME	MongoDB username
-MONGO_DB_PASSWORD	MongoDB password
-Values are injected via Kubernetes ConfigMaps and Secrets.
+<img width="733" height="197" alt="image" src="https://github.com/user-attachments/assets/8a159576-afc1-42c9-aa4f-31fb7cdbb1dc" />
+
 ________________________________________
 🔌 REST API Endpoints
-Method	Endpoint	Description
-GET	/api/users	Fetch all users
-GET	/api/users/{id}	Fetch user by ID
-POST	/save	Save user from UI form
+<img width="659" height="200" alt="image" src="https://github.com/user-attachments/assets/bed4d640-d846-470b-a61c-73b20182820c" />
+
 All APIs return JSON responses.
 
 
@@ -330,6 +329,47 @@ For **Cloud Kubernetes**:
 ```bash
 http://<NodeIP>:<NodePort>
 ```
+
+
+Layered Flow Description
+1. User Interaction / UI Layer
+•	The user opens the application via a browser.
+•	The index.html page is served by Spring Boot.
+•	User fills a registration form with first name, last name, and email.
+•	On form submission, the data is sent as a POST request to /save.
+2. Spring Boot Controller Layer
+•	UserController receives POST requests from UI.
+•	Validates user input and creates a new User object.
+•	Calls UserRepository.save(user) to persist the user.
+•	Redirects user back to home page after successful save.
+3. Repository & Database Layer
+•	UserRepository is a Spring Data MongoDB repository, providing CRUD operations.
+•	MongoDB stores the user data in the users collection.
+•	AJAX GET request to /api/users fetches all users dynamically.
+•	UserResource returns JSON data for frontend rendering.
+4. Dockerization
+•	Dockerfile uses a multi-stage build:
+1.	Maven container builds the JAR file.
+2.	JAR copied to lightweight Alpine JDK image.
+•	Exposes port 8080 for container access.
+•	Container can be run locally for development/testing.
+5. Kubernetes Orchestration
+•	Spring Boot container deployed as Pods in a Kubernetes Deployment.
+•	Multiple replicas ensure high availability and horizontal scaling.
+•	NodePort Service exposes the application externally.
+•	MongoDB deployed in a Pod with Persistent Volume (PVC) for data durability.
+•	ClusterIP Service exposes MongoDB internally for Spring Boot Pods.
+________________________________________
+Key Features of Flow
+•	Stateless application pods (Spring Boot) allow horizontal scaling.
+•	Persistent storage ensures MongoDB data survives pod restarts.
+•	AJAX-based UI dynamically updates without page reloads.
+•	Structured logging with Sleuth & Logback for traceability.
+•	Kubernetes Secrets manage credentials securely.
+________________________________________
+✅ Summary
+This flowchart and detailed explanation show the end-to-end lifecycle of your project:
+User → UI → Controller → Repository → Database → Docker → Kubernetes → UI
 
 🛠 Troubleshooting
 Application Not Starting
