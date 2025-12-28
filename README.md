@@ -280,15 +280,7 @@ http://localhost:8080
 ---
 **Kubernetes Diagram**
 
-┌────────────┐         ┌─────────────┐
-│ SpringApp  │         │ MongoDB RS  │
-│ Deployment │ <-----> │ ReplicaSet  │
-│ Pods (2)   │         │ Pods (1-3)  │
-└────────────┘         └─────────────┘
-         │                    │
-         ▼                    ▼
-      NodePort             ClusterIP
-      Service               Service
+<img width="290" height="207" alt="image" src="https://github.com/user-attachments/assets/c8fc8fe8-0574-48a2-8870-99750b76465e" />
 
 
 ## ☸️ Kubernetes Deployment Steps
