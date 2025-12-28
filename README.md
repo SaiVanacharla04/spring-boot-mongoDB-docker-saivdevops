@@ -4,12 +4,20 @@
 
 **Enterprise DevOps Reference Project**
 
-**Project Name:** `spring-boot-mongo-docker-saivdevops`
-**Version:** `1.0.1`
-**Author:** Sai Swaroop Vanacharla
-**Training:** DevOps Online Training – Hyderabad
-🌐 [http://saivdevops.com/](http://saivdevops.com/)
-**Email**: saivswaroop001@gmail.com
+---
+
+### Project Details
+
+| Attribute        | Details                                             |
+| ---------------- | --------------------------------------------------- |
+| **Project Name** | `spring-boot-mongo-docker-saivdevops`             |
+| **Version**      | `1.0.1`                                            |
+| **Author**       | Sai Swaroop Vanacharla                             |
+| **Training**     | DevOps Online Training – Hyderabad                 |
+| **Website**      | [saivdevops.com](http://saivdevops.com/)          |
+| **Email**        | saivswaroop001@gmail.com                           |
+
+---
 
 ---
 
