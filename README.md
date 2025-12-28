@@ -9,6 +9,7 @@
 **Author:** Sai Swaroop Vanacharla
 **Training:** DevOps Online Training – Hyderabad
 🌐 [http://saivdevops.com/](http://saivdevops.com/)
+**Email**: saivswaroop001@gmail.com
 
 ---
 
@@ -150,33 +151,52 @@ This project is a simple CRUD application:
 •	Deployed on Kubernetes with persistent storage and environment separation.
 
 **File Map**
-File	Purpose
-DemoApp.java	Entry-point; boots Spring, maps / → index.html.
-User.java	Mongo document (@Document) holding user fields + equals/hashCode.
-UserController.java	Form POST handler (/save) – persists new users via repository.
-UserResource.java	REST controller (/api/users) – lists/fetches users as JSON.
-UserRepository.java	Spring-Data interface; gives CRUD + paging on users collection.
-WebConfig.java	Static-resource routing (/css/**, /js/**, /webjars/**).
-index.html	Thymeleaf UI – bootstrap form + AJAX table showing saved users.
-application.yml	Runtime config – Mongo credentials/host/port via env-vars.
-bootstrap.yml	Early-boot properties (app name, default port 8080).
-logback-spring.xml	JSON console logs with trace/span IDs (Sleuth + Logstash encoder).
-pom.xml	Maven coordinates & deps: Spring Boot 2.1.5, MongoDB, Thymeleaf, WebJars, Sleuth.
-Dockerfile	Multi-stage build: Maven → JAR → Alpine JDK image, exposes 8080.
-springBootMongo.yaml	Complete K8s manifest – ConfigMap, Secret, PV, PVC, Mongo ReplicaSet, Spring Deployment + NodePort Service.
-k8s/deploy.yaml	Same as above (duplicated) – ready for kubectl apply -f k8s/deploy.yaml.
 
+| File                     | Purpose                                                                                                     |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| **DemoApp.java**         | Entry-point; boots Spring, maps `/` → `index.html`.                                                         |
+| **User.java**            | Mongo document (`@Document`) holding user fields + equals/hashCode.                                         |
+| **UserController.java**  | Form POST handler (`/save`) – persists new users via repository.                                            |
+| **UserResource.java**    | REST controller (`/api/users`) – lists/fetches users as JSON.                                               |
+| **UserRepository.java**  | Spring-Data interface; gives CRUD + paging on `users` collection.                                           |
+| **WebConfig.java**       | Static-resource routing (`/css/**`, `/js/**`, `/webjars/**`).                                               |
+| **index.html**           | Thymeleaf UI – bootstrap form + AJAX table showing saved users.                                             |
+| **application.yml**      | Runtime config – Mongo credentials/host/port via environment variables.                                      |
+| **bootstrap.yml**        | Early-boot properties (app name, default port 8080).                                                        |
+| **logback-spring.xml**   | JSON console logs with trace/span IDs (Sleuth + Logstash encoder).                                          |
+| **pom.xml**              | Maven coordinates & dependencies: Spring Boot 2.1.5, MongoDB, Thymeleaf, WebJars, Sleuth.                  |
+| **Dockerfile**           | Multi-stage build: Maven → JAR → Alpine JDK image, exposes 8080.                                            |
+| **springBootMongo.yaml** | Complete Kubernetes manifest – ConfigMap, Secret, PV, PVC, Mongo ReplicaSet, Spring Deployment + NodePort Service. |
+| **k8s/deploy.yaml**      | Same as above (duplicated) – ready for `kubectl apply -f k8s/deploy.yaml`.                                  |
 
 ________________________________________
 🌱 Environment Variables
-<img width="733" height="197" alt="image" src="https://github.com/user-attachments/assets/8a159576-afc1-42c9-aa4f-31fb7cdbb1dc" />
 
+| Variable          | Description                      |
+| ----------------- | -------------------------------- |
+| MONGO_DB_HOSTNAME | MongoDB hostname or service name |
+| MONGO_DB_USERNAME | MongoDB username                 |
+| MONGO_DB_PASSWORD | MongoDB password                 |
+
+These values are injected using Kubernetes ConfigMaps and Secrets.
 ________________________________________
 🔌 REST API Endpoints
-<img width="659" height="200" alt="image" src="https://github.com/user-attachments/assets/bed4d640-d846-470b-a61c-73b20182820c" />
+Exposes REST APIs for external systems or UI JavaScript calls.
+
+| Method | Endpoint          | Description            |
+| ------ | ----------------- | ---------------------- |
+| GET    | `/api/users`      | Fetch all users        |
+| GET    | `/api/users/{id}` | Fetch user by ID       |
+| POST   | `/save`           | Save user from UI form |
 
 All APIs return JSON responses.
-
+Usage:
+•	UI uses AJAX to load users
+•	APIs can be consumed by mobile apps or other services
+Standards:
+•	RESTful design
+•	JSON responses
+•	Logging for monitoring
 
 ## 🧩 Application Components Explained
 
@@ -415,7 +435,6 @@ MongoDB Connection Issues
 * Rolling updates supported
 * Logging & tracing enabled
 
----
 ---
 
 ## 🏁 Conclusion
