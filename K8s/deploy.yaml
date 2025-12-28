@@ -1,0 +1,233 @@
+# =================================================
+# ConfigMap: Stores non-sensitive configuration data
+# =================================================
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  # Name of the ConfigMap
+  name: springappconfigmap
+data:
+  # MongoDB username used by the application
+  username: springapp
+
+  # MongoDB password (example – usually avoid passwords in ConfigMap)
+  password: mongodb@123
+
+---
+# =================================================
+# Secret: Stores sensitive information securely
+# =================================================
+apiVersion: v1
+kind: Secret
+metadata:
+  # Name of the Secret
+  name: springappsecrets
+
+# Generic secret type
+type: Opaque
+
+# stringData allows plain text values (Kubernetes encodes them automatically)
+stringData:   # We can define multiple key-value pairs
+  password: devdb@123
+
+---
+# =================================================
+# PersistentVolume: Physical storage on the node
+# =================================================
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  # Name of the Persistent Volume
+  name: pv-hostpath
+spec:
+  # Manual storage class
+  storageClassName: manual
+
+  # Total storage capacity available
+  capacity:
+    storage: 1Gi
+
+  # Can be mounted by only one node at a time
+  accessModes:
+  - ReadWriteOnce
+
+  # Directory on the Kubernetes node
+  hostPath:
+    path: "/tmp/mongodata"
+
+---
+# =================================================
+# PersistentVolumeClaim: Requests storage from PV
+# =================================================
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  # Name of the PVC
+  name: pvc-hostpath
+spec:
+  # Must match PV storage class
+  storageClassName: manual
+
+  # Required access mode
+  accessModes:
+  - ReadWriteOnce
+
+  # Storage requested by the application
+  resources:
+    requests:
+      storage: 100Mi
+
+---
+# =================================================
+# Spring Boot Application Deployment
+# =================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # Name of the Deployment
+  name: springappdeployment
+spec:
+  # Number of application pod replicas
+  replicas: 4
+
+  # Selector to match application pods
+  selector:
+    matchLabels:
+      app: springapp
+
+  # Pod template
+  template:
+    metadata:
+      name: springapppod
+      labels:
+        app: springapp
+    spec:
+      containers:
+      - name: springappcontainer
+
+        # Docker image for Spring Boot application
+        image: dockerhandson/spring-boot-mongo
+
+        # Application runs on port 8080
+        ports:
+        - containerPort: 8080
+
+        # Environment variables for MongoDB connection
+        env:
+        - name: MONGO_DB_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: springappconfigmap
+              key: username
+
+        - name: MONGO_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: springappsecrets
+              key: password
+
+        # MongoDB service name used for connection
+        - name: MONGO_DB_HOSTNAME
+          value: mongo
+
+---
+# =================================================
+# Service: Exposes Spring Boot application
+# =================================================
+apiVersion: v1
+kind: Service
+metadata:
+  # Service name
+  name: springapp
+spec:
+  # Select Spring Boot pods
+  selector:
+    app: springapp
+
+  # Port mapping
+  ports:
+  - port: 80          # Service port
+    targetPort: 8080  # Container port
+
+  # NodePort allows external access
+  type: NodePort
+
+---
+# =================================================
+# MongoDB ReplicaSet with Persistent Storage
+# =================================================
+# MongoDB pod with volumes (HostPath)
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  # Name of the MongoDB ReplicaSet
+  name: mongodbrs
+spec:
+  # Selector to identify MongoDB pods
+  selector:
+    matchLabels:
+      app: mongodb
+
+  # MongoDB pod template
+  template:
+     metadata:
+       name: mongodbpod
+       labels:
+         app: mongodb
+     spec:
+       # Attach persistent storage
+       volumes:
+       - name: mongodb-pvc
+         persistentVolumeClaim:
+           claimName: pvc-hostpath
+
+       containers:
+       - name: mongodbcontainer
+
+         # Official MongoDB image
+         image: mongo
+
+         # MongoDB default port
+         ports:
+         - containerPort: 27017
+
+         # MongoDB credentials
+         env:
+         - name: MONGO_INITDB_ROOT_USERNAME
+           valueFrom:
+             configMapKeyRef:
+               name: springappconfigmap
+               key: username
+
+         - name: MONGO_INITDB_ROOT_PASSWORD
+           valueFrom:
+             secretKeyRef:
+               name: springappsecrets
+               key: password
+
+         # Mount persistent storage to MongoDB data directory
+         volumeMounts:
+         - name: mongodb-pvc
+           mountPath: /data/db
+
+---
+# =================================================
+# MongoDB Service (Internal access only)
+# =================================================
+apiVersion: v1
+kind: Service
+metadata:
+  # MongoDB service name used by Spring Boot app
+  name: mongo
+spec:
+  # ClusterIP makes it accessible only inside the cluster
+  type: ClusterIP
+
+  # Select MongoDB pods
+  selector:
+    app: mongodb
+
+  # MongoDB service port
+  ports:
+  - port: 27017
+    targetPort: 27017
