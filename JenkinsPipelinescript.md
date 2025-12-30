@@ -1,3 +1,17 @@
+# Jenkins Pipeline Script for Spring Boot + Docker + SonarQube + Nexus Backup
+
+This Jenkins pipeline performs the following tasks:
+
+1. Checkout the source code from GitHub.
+2. Build the Spring Boot project using Maven.
+3. Run SonarQube analysis.
+4. Build and tag a Docker image.
+5. Push the Docker image to Docker Hub.
+6. Backup the Nexus container and archive it in Jenkins.
+
+---
+
+```groovy
 pipeline {
     // Use any available Jenkins agent to run the pipeline
     agent any
